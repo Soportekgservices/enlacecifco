@@ -1,0 +1,275 @@
+"<!DOCTYPE html>
+<html>
+<head>
+  <base target=""_top"">
+  <meta name=""viewport"" content=""width=device-width, initial-scale=1"">
+  <title>Portal CIFCO - Verificación de Certificados</title>
+  <link href=""https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"" rel=""stylesheet"">
+  <link rel=""preconnect"" href=""https://fonts.googleapis.com"">
+  <link rel=""preconnect"" href=""https://fonts.gstatic.com"" crossorigin>
+  <link href=""https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@700&family=Roboto:wght@400;500&display=swap"" rel=""stylesheet"">
+
+  <style>
+    :root {
+      --cifco-blue-corp: #002D62;
+      --cifco-green-ui: #9CCA3B;
+      --cifco-teal-ui: #004A5A; 
+      --cifco-accent-ui: #f0ad4e;
+      --cifco-light-gray: #f8f9fa;
+      --cifco-white: #ffffff;
+    }
+    html, body { height: 100%; }
+    body {
+      display: flex; flex-direction: column;
+      background-color: var(--cifco-light-gray); font-family: 'Roboto', sans-serif;
+    }
+    main { flex: 1 0 auto; padding: 0; } /* Padding 0 para que el hero ocupe todo */
+    
+    .app-header {
+      background-color: var(--cifco-white); padding: 1rem;
+      border-bottom: 4px solid var(--cifco-blue-corp); text-align: center;
+    }
+    .app-header .cifco-logo-svg { height: 60px; width: auto; margin-bottom: 0.5rem; }
+    .app-header h3 { font-family: 'Roboto', sans-serif; font-weight: 400; color: var(--cifco-dark-text); font-size: 1.2rem; }
+    
+    @keyframes shrinkLogo {
+      from { height: 90px; opacity: 0; } to { height: 60px; opacity: 1; }
+    }
+    .logo-animated { animation: shrinkLogo 0.5s ease-out; }
+    
+    .app-footer {
+      flex-shrink: 0; background-color: var(--cifco-blue-corp);
+      color: #e9ecef; padding: 2rem 1rem;
+    }
+    .app-footer h5 {
+      color: var(--cifco-white); text-transform: uppercase; font-family: 'Roboto Slab', serif;
+      font-weight: 700; border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+      padding-bottom: 0.5rem; margin-bottom: 1rem;
+    }
+    .app-footer a { color: var(--cifco-white); transition: color 0.3s ease; }
+    .app-footer a:hover { color: #d4d4d4; }
+
+    .btn-primary {
+      background-color: var(--cifco-teal-ui); border-color: var(--cifco-teal-ui);
+      color: var(--cifco-white); font-weight: 500; transition: all 0.3s ease;
+    }
+    .btn-primary:hover {
+      background-color: #00333d; border-color: #00333d;
+      transform: translateY(-2px); box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+    #input-identificacion {
+      padding-left: 2.75rem;
+      background-image: url(""data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23002D62'%3E%3Cpath d='M20 2H4c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 18H4V4h16v16zm-8-6c1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3 1.34 3 3 3zm-6 4c0-2 4-3.1 6-3.1s6 1.1 6 3.1v1H6v-1z'/%3E%3C/svg%3E"");
+      background-repeat: no-repeat; background-position: left 0.75rem center; background-size: 1.25rem;
+    }
+    
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    .screen { display: none; animation: fadeIn 0.6s ease-in-out; }
+    
+    /* --- PANTALLA DE BIENVENIDA --- */
+    .welcome-hero {
+      background-color: var(--cifco-teal-ui); position: relative;
+      overflow: hidden; padding: 4rem 1rem; min-height: 50vh;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .welcome-content {
+      position: relative; z-index: 2; text-align: center;
+    }
+    .welcome-content .welcome-logo-large { height: 120px; margin-bottom: 1.5rem; }
+    .welcome-content .display-4 { font-family: 'Roboto Slab', serif; color: var(--cifco-blue-corp); }
+    .welcome-svg {
+      position: absolute; z-index: 1;
+      opacity: 0.08; color: var(--cifco-white);
+    }
+    #svg-grad-cap { bottom: -20px; left: -30px; width: 200px; transform: rotate(-15deg); }
+    #svg-cert { top: -30px; right: -40px; width: 200px; transform: rotate(15deg); }
+    
+    /* --- TARJETAS CON COLORES Y BOTÓN MEJORADO --- */
+    .resultado-card {
+      border: 1px solid #dee2e6; border-left-width: 5px;
+      margin-bottom: 1rem !important;
+    }
+    .resultado-card:nth-child(even) { border-left-color: var(--cifco-teal-ui); }
+    .resultado-card:nth-child(odd) { border-left-color: var(--cifco-green-ui); }
+    .resultado-card .card-title {
+        color: var(--cifco-teal-ui); font-family: 'Roboto Slab', serif; font-weight: 700;
+    }
+    .btn-view-doc {
+      background-color: var(--cifco-teal-ui); color: var(--cifco-white);
+      border: none; font-size: 0.85rem;
+    }
+    .btn-view-doc:hover { background-color: #00333d; color: var(--cifco-white); }
+    
+    /* ESTILOS RESPONSIVOS */
+    @media (max-width: 768px) { .welcome-svg { display: none; } }
+    @media (max-width: 576px) {
+      body { font-size: 16px; }
+      main { padding-top: 0; }
+      .app-header h3 { font-size: 1.1rem; }
+      .welcome-content .welcome-logo-large { height: 100px; }
+      .welcome-content .display-4 { font-size: 2.2rem; }
+      .lead { font-size: 1.05rem; }
+      .input-group { display: block; }
+      .input-group .form-control-lg { width: 100%; margin-bottom: 0.75rem; font-size: 1rem; }
+      .input-group .btn-lg { width: 100%; font-size: 1.1rem; }
+      .app-footer .col-md-4 { text-align: center !important; }
+    }
+  </style>
+</head>
+<body>
+
+  <header id=""app-header-main"" class=""app-header"" style=""display: none;"">
+    <div class=""container"">
+      <svg id=""header-logo"" class=""cifco-logo-svg"" viewBox=""0 0 500 100"" xmlns=""http://www.w3.org/2000/svg"" role=""img"" aria-labelledby=""logoTitle"">
+          <style>
+              .cifco-main-text { font-family: 'Roboto Slab', 'Times New Roman', serif; font-weight: 700; font-size: 60px; fill: #002D62; text-anchor: middle; }
+              .cifco-sub-text { font-family: 'Roboto', 'Arial', sans-serif; font-weight: 500; font-size: 14px; fill: #002D62; text-anchor: middle; letter-spacing: 2px; }
+          </style>
+          <title id=""logoTitle"">Logo de CIFCO Corporación Educativa</title>
+          <text x=""50%"" y=""60"" class=""cifco-main-text"">CIFCO</text>
+          <text x=""50%"" y=""82"" class=""cifco-sub-text"">CORPORACIÓN EDUCATIVA</text>
+      </svg>
+      <h3 id=""main-title"" class=""fw-light""></h3>
+    </div>
+  </header>
+
+  <main>
+    <!-- PANTALLA 1: BIENVENIDA -->
+    <div id=""welcome-screen"" class=""screen"">
+        <div class=""welcome-hero"">
+            <svg id=""svg-grad-cap"" class=""welcome-svg"" viewBox=""0 0 24 24"" fill=""currentColor""><path d=""M12 3L1 9l4 2.18v6.32L12 21l7-3.5V11.18L23 9zM5 13.18v-3.43L12 13l7-3.25v3.43L12 16.5z""></path></svg>
+            <svg id=""svg-cert"" class=""welcome-svg"" viewBox=""0 0 24 24"" fill=""currentColor""><path d=""M16 2H8C4.69 2 2 4.69 2 8v13h2V8c0-2.59 2.11-4.7 4.7-4.7h.3V2zm-2 2h-4v14h4zm6 2v13c0 1.66-1.34 3-3 3H8c-1.66 0-3-1.34-3-3V7h2v12c0 .55.45 1 1 1h8c.55 0 1-.45 1-1V7h2zm-2 0H10v12h8z""></path></svg>
+            
+            <div class=""container welcome-content"">
+                <div class=""card shadow-lg"">
+                    <div class=""card-body p-5"">
+                        <svg class=""cifco-logo-svg welcome-logo-large"" viewBox=""0 0 500 100"" xmlns=""http://www.w3.org/2000/svg"">
+                          <text x=""50%"" y=""60"" class=""cifco-main-text"">CIFCO</text>
+                          <text x=""50%"" y=""82"" class=""cifco-sub-text"">CORPORACIÓN EDUCATIVA</text>
+                        </svg>
+                        <h1 class=""display-4"">Bienvenido</h1>
+                        <p class=""lead text-muted"">Portal oficial para la validación de certificados.</p>
+                        <hr class=""my-4"">
+                        <button id=""btn-access-portal"" class=""btn btn-primary btn-lg"">Acceder al Portal de Verificación</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- PANTALLA 2: VERIFICADOR -->
+    <div id=""verifier-screen"" class=""screen"">
+      <div class=""container pt-4""> <!-- Añadimos padding top para separar del header -->
+        <div class=""card shadow-sm"">
+            <div class=""card-body p-4"">
+              <p class=""lead text-center"">Introduce el número de identificación para buscar.</p>
+              <div class=""input-group mb-3"">
+                <input type=""text"" id=""input-identificacion"" class=""form-control form-control-lg"" placeholder=""Número de identificación"">
+                <button id=""btn-consultar"" class=""btn btn-primary btn-lg"" type=""button"">
+                  <span id=""btn-text"">Consultar</span>
+                  <span id=""loading-spinner"" class=""spinner-border spinner-border-sm"" style=""display: none;""></span>
+                </button>
+              </div>
+              <div id=""status-message"" class=""mt-3""></div>
+              <div id=""resultados-container"" class=""mt-4""></div>
+            </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class=""app-footer"">
+    <div class=""container"">
+      <div class=""row"">
+        <div class=""col-md-4 mb-4 mb-md-0 text-md-start"">
+          <h5>Sobre CIFCO</h5>
+          <p class=""small"">CIFCO es una empresa de Provider Group, comprometida con la formación de alta calidad.</p>
+          <p class=""small"">© 2024 CIFCO. Todos los derechos reservados.</p>
+        </div>
+        <div class=""col-md-4 mb-4 mb-md-0 text-md-start"">
+          <h5>Aprobado según Resoluciones</h5>
+          <ul class=""list-unstyled small"">
+            <li>402 de 2019 SEM de Malambo - Atlántico.</li>
+            <li>041 de 2021 SEM de Soledad - Atlántico CLEI.</li>
+            <li>042 de 2021 SEM de Soledad - Atlántico.</li>
+            <li>0256 y 0011 de 2022 SEM de Soledad, Atlántico.</li>
+            <li>0430 de 2022 MD-DIMAR-SUBMERC-AGEM.</li>
+          </ul>
+        </div>
+        <div class=""col-md-4 mb-4 mb-md-0 text-md-start"">
+          <h5>Contacto</h5>
+          <ul class=""list-unstyled small"">
+            <li><a href=""tel:+573005364261"" class=""text-decoration-none"">+57 300-5364261</a></li>
+            <li><a href=""mailto:contacto@cifcoeduca.com"" class=""text-decoration-none"">contacto@cifcoeduca.com</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    const welcomeScreen = document.getElementById('welcome-screen');
+    const verifierScreen = document.getElementById('verifier-screen');
+    const btnAccessPortal = document.getElementById('btn-access-portal');
+    const mainTitle = document.getElementById('main-title');
+    const appHeader = document.getElementById('app-header-main');
+    const headerLogo = document.getElementById('header-logo');
+
+    document.addEventListener('DOMContentLoaded', () => {
+        welcomeScreen.style.display = 'block';
+    });
+
+    btnAccessPortal.addEventListener('click', () => {
+        welcomeScreen.style.display = 'none';
+        appHeader.style.display = 'block';
+        headerLogo.classList.add('logo-animated');
+        verifierScreen.style.display = 'block';
+        mainTitle.textContent = 'Portal de Verificación de Certificados';
+    });
+    
+    // --- CÓDIGO DEL VERIFICADOR ---
+    const inputIdentificacion = document.getElementById('input-identificacion');
+    // ... (resto de constantes) ...
+    const btnConsultar = document.getElementById('btn-consultar');
+    const btnText = document.getElementById('btn-text');
+    const loadingSpinner = document.getElementById('loading-spinner');
+    const statusMessage = document.getElementById('status-message');
+    const resultadosContainer = document.getElementById('resultados-container');
+
+    btnConsultar.addEventListener('click', handleSearch);
+    inputIdentificacion.addEventListener('keyup', (event) => { if (event.key === 'Enter') { handleSearch(); } });
+
+    function handleSearch() {
+      const identificacion = inputIdentificacion.value.trim();
+      statusMessage.innerHTML = '';
+      resultadosContainer.innerHTML = '';
+      if (!identificacion) { showMessage('Por favor, introduce un número de identificación.', 'warning'); return; }
+      setLoading(true);
+      google.script.run.withSuccessHandler(displayResult).withFailureHandler(displayError).buscarPorIdentificacion(identificacion);
+    }
+
+    function displayResult(resultados) {
+      setLoading(false);
+      if (resultados && resultados.length > 0) {
+        const nombreCompleto = resultados[0].Nombre_completo;
+        const identificacion = resultados[0].Identificacion;
+        let headerHTML = `<h3 class=""mb-3"" style=""font-family: 'Roboto', sans-serif; font-weight: 400;"">Resultados para: ${nombreCompleto}</h3><p class=""text-muted"">Identificación consultada: ${identificacion}</p>`;
+        resultadosContainer.innerHTML = headerHTML;
+        resultados.forEach(certificado => {
+          const certificadoHTML = `<div class=""card resultado-card""><div class=""card-body""><h5 class=""card-title""><strong>Formación:</strong> ${certificado.Nomformacion}</h5><p class=""card-text mb-1""><strong>Registro:</strong> ${certificado.Registro}</p><p class=""card-text mb-2""><strong>Fecha:</strong> ${certificado.Fecha}</p><a href=""${certificado.Certificado}"" class=""btn btn-sm btn-view-doc"" target=""_blank"" rel=""noopener noreferrer"">Ver Documento</a></div></div>`;
+          resultadosContainer.innerHTML += certificadoHTML;
+        });
+      } else { showMessage('No se encontraron registros para la identificación proporcionada.', 'info'); }
+    }
+
+    function displayError(error) { setLoading(false); showMessage(`Error: ${error.message}`, 'danger'); }
+    function setLoading(isLoading) {
+      btnText.textContent = isLoading ? 'Buscando...' : 'Consultar';
+      loadingSpinner.style.display = isLoading ? 'inline-block' : 'none';
+      btnConsultar.disabled = isLoading;
+      inputIdentificacion.disabled = isLoading;
+    }
+    function showMessage(message, type) { statusMessage.innerHTML = `<div class=""alert alert-${type}"" role=""alert"">${message}</div>`; }
+  </script>
+</body>
+</html>"
