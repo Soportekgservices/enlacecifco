@@ -1,53 +1,44 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <base target=""_top"">
-  <meta name=""viewport"" content=""width=device-width, initial-scale=1"">
+  <base target="_top">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Portal CIFCO - Verificación de Certificados</title>
-  <link href=""https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"" rel=""stylesheet"">
-  <link rel=""preconnect"" href=""https://fonts.googleapis.com"">
-  <link rel=""preconnect"" href=""https://fonts.gstatic.com"" crossorigin>
-  <link href=""https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@700&family=Roboto:wght@400;500&display=swap"" rel=""stylesheet"">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@700&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
 
   <style>
     :root {
       --cifco-blue-corp: #002D62;
       --cifco-green-ui: #9CCA3B;
-      --cifco-teal-ui: #004A5A; 
+      --cifco-teal-ui: #004A5A;
       --cifco-accent-ui: #f0ad4e;
       --cifco-light-gray: #f8f9fa;
       --cifco-white: #ffffff;
     }
-    html, body { height: 100%; }
-    body {
-      display: flex; flex-direction: column;
-      background-color: var(--cifco-light-gray); font-family: 'Roboto', sans-serif;
+    html, body {
+      height: 100%; /* Asegura que el body ocupe toda la altura */
+      margin: 0;
+      padding: 0;
     }
-    main { flex: 1 0 auto; padding: 0; } /* Padding 0 para que el hero ocupe todo */
-    
+    body {
+      background-color: var(--cifco-light-gray);
+      font-family: 'Roboto', sans-serif;
+    }
+    main {
+      padding: 0; /* Padding 0 para que el hero ocupe todo */
+      min-height: 100vh; /* Asegura que el contenido principal ocupe al menos toda la altura de la vista */
+    }
+    .container { max-width: 960px; }
+
     .app-header {
       background-color: var(--cifco-white); padding: 1rem;
       border-bottom: 4px solid var(--cifco-blue-corp); text-align: center;
     }
     .app-header .cifco-logo-svg { height: 60px; width: auto; margin-bottom: 0.5rem; }
     .app-header h3 { font-family: 'Roboto', sans-serif; font-weight: 400; color: var(--cifco-dark-text); font-size: 1.2rem; }
-    
-    @keyframes shrinkLogo {
-      from { height: 90px; opacity: 0; } to { height: 60px; opacity: 1; }
-    }
-    .logo-animated { animation: shrinkLogo 0.5s ease-out; }
-    
-    .app-footer {
-      flex-shrink: 0; background-color: var(--cifco-blue-corp);
-      color: #e9ecef; padding: 2rem 1rem;
-    }
-    .app-footer h5 {
-      color: var(--cifco-white); text-transform: uppercase; font-family: 'Roboto Slab', serif;
-      font-weight: 700; border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-      padding-bottom: 0.5rem; margin-bottom: 1rem;
-    }
-    .app-footer a { color: var(--cifco-white); transition: color 0.3s ease; }
-    .app-footer a:hover { color: #d4d4d4; }
 
     .btn-primary {
       background-color: var(--cifco-teal-ui); border-color: var(--cifco-teal-ui);
@@ -57,19 +48,14 @@
       background-color: #00333d; border-color: #00333d;
       transform: translateY(-2px); box-shadow: 0 4px 8px rgba(0,0,0,0.1);
     }
-    #input-identificacion {
-      padding-left: 2.75rem;
-      background-image: url(""data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23002D62'%3E%3Cpath d='M20 2H4c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 18H4V4h16v16zm-8-6c1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3 1.34 3 3 3zm-6 4c0-2 4-3.1 6-3.1s6 1.1 6 3.1v1H6v-1z'/%3E%3C/svg%3E"");
-      background-repeat: no-repeat; background-position: left 0.75rem center; background-size: 1.25rem;
-    }
-    
+
     @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
     .screen { display: none; animation: fadeIn 0.6s ease-in-out; }
-    
+
     /* --- PANTALLA DE BIENVENIDA --- */
     .welcome-hero {
       background-color: var(--cifco-teal-ui); position: relative;
-      overflow: hidden; padding: 4rem 1rem; min-height: 50vh;
+      overflow: hidden; padding: 4rem 1rem; min-height: 100vh; /* Ocupa toda la altura de la vista */
       display: flex; align-items: center; justify-content: center;
     }
     .welcome-content {
@@ -83,7 +69,7 @@
     }
     #svg-grad-cap { bottom: -20px; left: -30px; width: 200px; transform: rotate(-15deg); }
     #svg-cert { top: -30px; right: -40px; width: 200px; transform: rotate(15deg); }
-    
+
     /* --- TARJETAS CON COLORES Y BOTÓN MEJORADO --- */
     .resultado-card {
       border: 1px solid #dee2e6; border-left-width: 5px;
@@ -99,113 +85,182 @@
       border: none; font-size: 0.85rem;
     }
     .btn-view-doc:hover { background-color: #00333d; color: var(--cifco-white); }
-    
-    /* ESTILOS RESPONSIVOS */
+
+    /* Ajustes responsivos */
     @media (max-width: 768px) { .welcome-svg { display: none; } }
+
+    /* ***** COMIENZO DE LOS AJUSTES PARA VISTA MÓVIL (max-width: 576px) ***** */
     @media (max-width: 576px) {
       body { font-size: 16px; }
-      main { padding-top: 0; }
+      main { padding: 0; }
       .app-header h3 { font-size: 1.1rem; }
-      .welcome-content .welcome-logo-large { height: 100px; }
-      .welcome-content .display-4 { font-size: 2.2rem; }
-      .lead { font-size: 1.05rem; }
-      .input-group { display: block; }
-      .input-group .form-control-lg { width: 100%; margin-bottom: 0.75rem; font-size: 1rem; }
-      .input-group .btn-lg { width: 100%; font-size: 1.1rem; }
-      .app-footer .col-md-4 { text-align: center !important; }
+      .container { padding: 0 0.5rem; }
+
+      /* Ajustes para el input y botón en pantalla de Verificador */
+      .input-group {
+        flex-direction: column !important; /* Forzar apilamiento vertical */
+        display: flex !important; /* Asegurar que sea un contenedor flex */
+        margin-bottom: 0 !important; /* Eliminar el margin-bottom para que los elementos del input-group se peguen */
+      }
+
+      /* Estilos para el contenedor del icono (parte superior del grupo) */
+      .input-group-text {
+        width: 100% !important; /* Ocupa todo el ancho */
+        justify-content: center; /* Centrar el icono */
+        align-items: center; /* Centrar verticalmente */
+        padding: 0.75rem 0 !important; /* Ajustar padding verticalmente */
+        border-radius: 0.375rem 0.375rem 0 0 !important; /* Bordes redondeados solo arriba */
+        border-bottom: 0 !important; /* Eliminar el borde inferior para que se una al input */
+        background-color: var(--cifco-light-gray); /* Un color que se integre mejor */
+        color: var(--cifco-blue-corp); /* Color del icono */
+        border: 1px solid #ced4da; /* Asegurar el borde */
+      }
+      .input-group-text svg {
+        margin: 0 !important; /* Eliminar márgenes innecesarios del SVG */
+        width: 24px; /* Un poco más grande para visibilidad */
+        height: 24px;
+      }
+
+      /* Estilos para el input (parte media del grupo) */
+      .input-group .form-control {
+        border-radius: 0 0 0.375rem 0.375rem !important; /* Bordes redondeados solo abajo */
+        width: 100% !important; /* Ancho completo */
+        margin-top: 0 !important; /* Asegurar que no haya margen superior para que se una */
+        border-top: 0 !important; /* Eliminar el borde superior para que se una al input-group-text */
+        border: 1px solid #ced4da; /* Asegurar el borde */
+      }
+
+      /* Estilos para el botón (debajo del grupo de input) */
+      .input-group + .btn { /* Selecciona el botón que sigue directamente a un .input-group */
+        width: 100% !important; /* Ancho completo */
+        margin-top: 1rem !important; /* Espacio entre el input y el botón */
+        border-radius: 0.375rem !important; /* Bordes redondeados completos para el botón */
+        padding: 0.75rem 1.5rem !important; /* Aumentar padding para mejor toque */
+        font-size: 1.1rem !important; /* Aumentar tamaño de fuente del botón */
+      }
+
+      /* Ajustar el padding general del contenedor de la tarjeta si es necesario */
+      .card-body {
+        padding: 1.5rem !important; /* Un poco más de padding general en la tarjeta */
+      }
+
+      /* Asegurar que el mensaje de estado tenga espacio */
+      #status-message {
+          margin-top: 1rem !important;
+      }
+
+      /* Ajuste para el texto principal del input-group */
+      .lead.text-center {
+          margin-bottom: 1.5rem !important; /* Más espacio entre el texto y el input */
+      }
+
+      /* Ajustes específicos para el logo en la pantalla de bienvenida móvil */
+      .welcome-content .welcome-logo-large {
+        height: auto; /* Permitir que la altura se ajuste automáticamente */
+        max-width: 100%; /* Asegurar que no exceda el ancho del contenedor */
+        margin-left: auto; /* Centrar el SVG horizontalmente */
+        margin-right: auto; /* Centrar el SVG horizontalmente */
+        display: block; /* Asegurar que tome el ancho completo y los márgenes automáticos funcionen */
+        padding: 0 1rem; /* Añadir un poco de padding horizontal para que el logo no se pegue a los bordes */
+        box-sizing: border-box; /* Incluir padding en el ancho total */
+      }
+
+      /* Ajustar el tamaño de fuente del texto dentro del SVG para pantallas pequeñas si sigue cortándose */
+      .welcome-content .welcome-logo-large .cifco-main-text {
+          font-size: 45px; /* Reducir el tamaño de la fuente principal si es necesario */
+      }
+
+      .welcome-content .welcome-logo-large .cifco-sub-text {
+          font-size: 12px; /* Reducir el tamaño de la sub-fuente si es necesario */
+      }
+
+      /* Ajustar el padding de la tarjeta de bienvenida si el contenido aún se ve apretado */
+      .welcome-hero .card-body {
+          padding: 2.5rem 1rem !important; /* Ajustar padding para más espacio interior */
+      }
+
+      /* Ajustar el tamaño de la fuente para el Bienvenido y el lead text si es necesario */
+      .welcome-content .display-4 {
+          font-size: 2.5rem; /* Ajustar el tamaño del título "Bienvenido" */
+      }
+
+      .welcome-content .lead {
+          font-size: 1rem; /* Ajustar el tamaño del texto descriptivo */
+      }
+
+      /* Ajustar el tamaño del botón de acceso si es necesario */
+      #btn-access-portal {
+          font-size: 1rem; /* Ajustar el tamaño de fuente del botón */
+          padding: 0.8rem 1.5rem; /* Ajustar padding del botón */
+      }
     }
+    /* ***** FIN DE LOS AJUSTES PARA VISTA MÓVIL (max-width: 576px) ***** */
   </style>
 </head>
 <body>
 
-  <header id=""app-header-main"" class=""app-header"" style=""display: none;"">
-    <div class=""container"">
-      <svg id=""header-logo"" class=""cifco-logo-svg"" viewBox=""0 0 500 100"" xmlns=""http://www.w3.org/2000/svg"" role=""img"" aria-labelledby=""logoTitle"">
+  <header id="app-header-main" class="app-header" style="display: none;">
+    <div class="container">
+      <svg id="header-logo" class="cifco-logo-svg" viewBox="0 0 500 100" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="logoTitle">
           <style>
               .cifco-main-text { font-family: 'Roboto Slab', 'Times New Roman', serif; font-weight: 700; font-size: 60px; fill: #002D62; text-anchor: middle; }
               .cifco-sub-text { font-family: 'Roboto', 'Arial', sans-serif; font-weight: 500; font-size: 14px; fill: #002D62; text-anchor: middle; letter-spacing: 2px; }
           </style>
-          <title id=""logoTitle"">Logo de CIFCO Corporación Educativa</title>
-          <text x=""50%"" y=""60"" class=""cifco-main-text"">CIFCO</text>
-          <text x=""50%"" y=""82"" class=""cifco-sub-text"">CORPORACIÓN EDUCATIVA</text>
+          <title id="logoTitle">Logo de CIFCO Corporativa Educativa</title>
+          <text x="50%" y="60" class="cifco-main-text">CIFCO</text>
+          <text x="50%" y="82" class="cifco-sub-text">CORPORACIÓN EDUCATIVA</text>
       </svg>
-      <h3 id=""main-title"" class=""fw-light""></h3>
+      <h3 id="main-title" class="fw-light"></h3>
     </div>
   </header>
 
   <main>
-    <!-- PANTALLA 1: BIENVENIDA -->
-    <div id=""welcome-screen"" class=""screen"">
-        <div class=""welcome-hero"">
-            <svg id=""svg-grad-cap"" class=""welcome-svg"" viewBox=""0 0 24 24"" fill=""currentColor""><path d=""M12 3L1 9l4 2.18v6.32L12 21l7-3.5V11.18L23 9zM5 13.18v-3.43L12 13l7-3.25v3.43L12 16.5z""></path></svg>
-            <svg id=""svg-cert"" class=""welcome-svg"" viewBox=""0 0 24 24"" fill=""currentColor""><path d=""M16 2H8C4.69 2 2 4.69 2 8v13h2V8c0-2.59 2.11-4.7 4.7-4.7h.3V2zm-2 2h-4v14h4zm6 2v13c0 1.66-1.34 3-3 3H8c-1.66 0-3-1.34-3-3V7h2v12c0 .55.45 1 1 1h8c.55 0 1-.45 1-1V7h2zm-2 0H10v12h8z""></path></svg>
-            
-            <div class=""container welcome-content"">
-                <div class=""card shadow-lg"">
-                    <div class=""card-body p-5"">
-                        <svg class=""cifco-logo-svg welcome-logo-large"" viewBox=""0 0 500 100"" xmlns=""http://www.w3.org/2000/svg"">
-                          <text x=""50%"" y=""60"" class=""cifco-main-text"">CIFCO</text>
-                          <text x=""50%"" y=""82"" class=""cifco-sub-text"">CORPORACIÓN EDUCATIVA</text>
+    <div id="welcome-screen" class="screen">
+        <div class="welcome-hero">
+            <svg id="svg-grad-cap" class="welcome-svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 3L1 9l4 2.18v6.32L12 21l7-3.5V11.18L23 9zM5 13.18v-3.43L12 13l7-3.25v3.43L12 16.5z"></path></svg>
+            <svg id="svg-cert" class="welcome-svg" viewBox="0 0 24 24" fill="currentColor"><path d="M16 2H8C4.69 2 2 4.69 2 8v13h2V8c0-2.59 2.11-4.7 4.7-4.7h.3V2zm-2 2h-4v14h4zm6 2v13c0 1.66-1.34 3-3 3H8c-1.66 0-3-1.34-3-3V7h2v12c0 .55.45 1 1 1h8c.55 0 1-.45 1-1V7h2zm-2 0H10v12h8z"></path></svg>
+
+            <div class="container welcome-content">
+                <div class="card shadow-lg">
+                    <div class="card-body p-5">
+                        <svg class="cifco-logo-svg welcome-logo-large" viewBox="0 0 500 100" xmlns="http://www.w3.org/2000/svg">
+                          <text x="50%" y="60" class="cifco-main-text">CIFCO</text>
+                          <text x="50%" y="82" class="cifco-sub-text">CORPORACIÓN EDUCATIVA</text>
                         </svg>
-                        <h1 class=""display-4"">Bienvenido</h1>
-                        <p class=""lead text-muted"">Portal oficial para la validación de certificados.</p>
-                        <hr class=""my-4"">
-                        <button id=""btn-access-portal"" class=""btn btn-primary btn-lg"">Acceder al Portal de Verificación</button>
+                        <h1 class="display-4">Bienvenido</h1>
+                        <p class="lead text-muted">Portal oficial para la validación de certificados.</p>
+                        <hr class="my-4">
+                        <button id="btn-access-portal" class="btn btn-primary btn-lg">Acceder al Portal de Verificación</button>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    
-    <!-- PANTALLA 2: VERIFICADOR -->
-    <div id=""verifier-screen"" class=""screen"">
-      <div class=""container pt-4""> <!-- Añadimos padding top para separar del header -->
-        <div class=""card shadow-sm"">
-            <div class=""card-body p-4"">
-              <p class=""lead text-center"">Introduce el número de identificación para buscar.</p>
-              <div class=""input-group mb-3"">
-                <input type=""text"" id=""input-identificacion"" class=""form-control form-control-lg"" placeholder=""Número de identificación"">
-                <button id=""btn-consultar"" class=""btn btn-primary btn-lg"" type=""button"">
-                  <span id=""btn-text"">Consultar</span>
-                  <span id=""loading-spinner"" class=""spinner-border spinner-border-sm"" style=""display: none;""></span>
+
+    <div id="verifier-screen" class="screen">
+      <div class="container pt-4">
+        <div class="card shadow-sm">
+            <div class="card-body p-4">
+              <p class="lead text-center">Introduce el número de identificación para buscar.</p>
+              <div class="input-group mb-3">
+                <span class="input-group-text">
+                  <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='#002D62' width="20" height="20">
+                    <path d='M20 2H4c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 18H4V4h16v16zm-8-6c1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3 1.34 3 3 3zm-6 4c0-2 4-3.1 6-3.1s6 1.1 6 3.1v1H6v-1z'/>
+                  </svg>
+                </span>
+                <input type="text" id="input-identificacion" class="form-control" placeholder="Número de Identificación">
+                <button id="btn-consultar" class="btn btn-primary btn-lg" type="button">
+                  <span id="btn-text">Consultar</span>
+                  <span id="loading-spinner" class="spinner-border spinner-border-sm" style="display: none;"></span>
                 </button>
               </div>
-              <div id=""status-message"" class=""mt-3""></div>
-              <div id=""resultados-container"" class=""mt-4""></div>
+              <div id="status-message" class="mt-3"></div>
+              <div id="resultados-container" class="mt-4"></div>
             </div>
         </div>
       </div>
     </div>
   </main>
-
-  <footer class=""app-footer"">
-    <div class=""container"">
-      <div class=""row"">
-        <div class=""col-md-4 mb-4 mb-md-0 text-md-start"">
-          <h5>Sobre CIFCO</h5>
-          <p class=""small"">CIFCO es una empresa de Provider Group, comprometida con la formación de alta calidad.</p>
-          <p class=""small"">© 2024 CIFCO. Todos los derechos reservados.</p>
-        </div>
-        <div class=""col-md-4 mb-4 mb-md-0 text-md-start"">
-          <h5>Aprobado según Resoluciones</h5>
-          <ul class=""list-unstyled small"">
-            <li>402 de 2019 SEM de Malambo - Atlántico.</li>
-            <li>041 de 2021 SEM de Soledad - Atlántico CLEI.</li>
-            <li>042 de 2021 SEM de Soledad - Atlántico.</li>
-            <li>0256 y 0011 de 2022 SEM de Soledad, Atlántico.</li>
-            <li>0430 de 2022 MD-DIMAR-SUBMERC-AGEM.</li>
-          </ul>
-        </div>
-        <div class=""col-md-4 mb-4 mb-md-0 text-md-start"">
-          <h5>Contacto</h5>
-          <ul class=""list-unstyled small"">
-            <li><a href=""tel:+573005364261"" class=""text-decoration-none"">+57 300-5364261</a></li>
-            <li><a href=""mailto:contacto@cifcoeduca.com"" class=""text-decoration-none"">contacto@cifcoeduca.com</a></li>
-          </ul>
-        </div>
-      </div>
-    </div>
-  </footer>
 
   <script>
     const welcomeScreen = document.getElementById('welcome-screen');
@@ -226,10 +281,8 @@
         verifierScreen.style.display = 'block';
         mainTitle.textContent = 'Portal de Verificación de Certificados';
     });
-    
-    // --- CÓDIGO DEL VERIFICADOR ---
+
     const inputIdentificacion = document.getElementById('input-identificacion');
-    // ... (resto de constantes) ...
     const btnConsultar = document.getElementById('btn-consultar');
     const btnText = document.getElementById('btn-text');
     const loadingSpinner = document.getElementById('loading-spinner');
@@ -237,7 +290,9 @@
     const resultadosContainer = document.getElementById('resultados-container');
 
     btnConsultar.addEventListener('click', handleSearch);
-    inputIdentificacion.addEventListener('keyup', (event) => { if (event.key === 'Enter') { handleSearch(); } });
+    inputIdentificacion.addEventListener('keyup', (event) => {
+      if (event.key === 'Enter') { handleSearch(); }
+    });
 
     function handleSearch() {
       const identificacion = inputIdentificacion.value.trim();
@@ -253,10 +308,10 @@
       if (resultados && resultados.length > 0) {
         const nombreCompleto = resultados[0].Nombre_completo;
         const identificacion = resultados[0].Identificacion;
-        let headerHTML = `<h3 class=""mb-3"" style=""font-family: 'Roboto', sans-serif; font-weight: 400;"">Resultados para: ${nombreCompleto}</h3><p class=""text-muted"">Identificación consultada: ${identificacion}</p>`;
+        let headerHTML = `<h3 class="mb-3" style="font-family: 'Roboto', sans-serif; font-weight: 400;">Resultados para: ${nombreCompleto}</h3><p class="text-muted">Identificación consultada: ${identificacion}</p>`;
         resultadosContainer.innerHTML = headerHTML;
         resultados.forEach(certificado => {
-          const certificadoHTML = `<div class=""card resultado-card""><div class=""card-body""><h5 class=""card-title""><strong>Formación:</strong> ${certificado.Nomformacion}</h5><p class=""card-text mb-1""><strong>Registro:</strong> ${certificado.Registro}</p><p class=""card-text mb-2""><strong>Fecha:</strong> ${certificado.Fecha}</p><a href=""${certificado.Certificado}"" class=""btn btn-sm btn-view-doc"" target=""_blank"" rel=""noopener noreferrer"">Ver Documento</a></div></div>`;
+          const certificadoHTML = `<div class="card resultado-card"><div class="card-body"><h5 class="card-title"><strong>Formación:</strong> ${certificado.Nomformacion}</h5><p class="card-text mb-1"><strong>Registro:</strong> ${certificado.Registro}</p><p class="card-text mb-2"><strong>Fecha:</strong> ${certificado.Fecha}</p><a href="${certificado.Certificado}" class="btn btn-sm btn-view-doc" target="_blank" rel="noopener noreferrer">Ver Documento</a></div></div>`;
           resultadosContainer.innerHTML += certificadoHTML;
         });
       } else { showMessage('No se encontraron registros para la identificación proporcionada.', 'info'); }
@@ -269,7 +324,7 @@
       btnConsultar.disabled = isLoading;
       inputIdentificacion.disabled = isLoading;
     }
-    function showMessage(message, type) { statusMessage.innerHTML = `<div class=""alert alert-${type}"" role=""alert"">${message}</div>`; }
+    function showMessage(message, type) { statusMessage.innerHTML = `<div class="alert alert-${type}" role="alert">${message}</div>`; }
   </script>
 </body>
 </html>
